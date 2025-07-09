@@ -1,0 +1,64 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      # - POSTGRES_DSN=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      # - AMQP_DSN=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672/
+      # - REDIS_URL=redis://redis:6379
+    depends_on:
+      # - postgres
+      # - rabbitmq
+      # - redis
+    volumes:
+      - .:/app
+    networks:
+      - backend
+    command: uv run python main.py
+
+
+  # postgres:
+  #   image: postgres:17
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     POSTGRES_DB: ${POSTGRES_DB}
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - backend
+
+  # rabbitmq:
+  #   image: rabbitmq:management
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+  #     RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+  #   volumes:
+  #     - rabbitmq_data:/var/lib/rabbitmq
+  #   networks:
+  #     - backend
+  #
+  # redis:
+  #   image: redis:alpine
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - backend
+
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  # postgres_data:
+  #   driver: local
+  # rabbitmq_data:
+  #   driver: local
+  # redis_data:
+  #   driver: local
